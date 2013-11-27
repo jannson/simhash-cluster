@@ -44,7 +44,7 @@ class Master(object):
     def register(self, hostname):
         # Accept a new slave. First, determine how many shards we're going to
         # give to each node once we add this new one
-        count = min(self.max_node_shards, self.shards / (len(self.slaves) + 1))
+        count = max(self.max_node_shards, self.shards / (len(self.slaves) + 1))
         assign = self.unassigned()[0:count]
         if (len(assign) < count):
             # We need to actually steal shards from some of the existing slaves
@@ -126,7 +126,7 @@ class Master(object):
         # Listen for nodes trying to connect
         import zerorpc
         self.server = zerorpc.Server(self)
-        self.server.bind('tcp://0.0.0.0:1234')
+        self.server.bind('tcp://0.0.0.0:5678')
         self.server.run()
     
     def find(self, h):

@@ -15,7 +15,8 @@ setup(name           = 'smhcluster',
     },
     scripts          = [
         'bin/simhash-master',
-        'bin/simhash-slave'
+        'bin/simhash-slave',
+        'bin/simhash-run',
     ],
     dependencies     = [
         'simhash',   # For obvious reasons

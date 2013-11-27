@@ -6,8 +6,8 @@ diff_bits: 3
 
 # How should we serve the API?
 adapters:
-  smhcluster.adapters.http.Server:
-    port: 8080
+#  smhcluster.adapters.http.Server:
+#    port: 8080
   smhcluster.adapters.zrpc.Server:
     port: 5678
 

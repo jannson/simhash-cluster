@@ -1,0 +1,66 @@
+#! /usr/bin/env python
+import argparse
+
+parser = argparse.ArgumentParser(description='Run and a near-duplicates master')
+parser.add_argument('--config', dest='config', type=str,
+    help='Path to configuration')
+
+args = parser.parse_args()
+
+import time
+import yaml
+from socket import gethostname
+from multiprocessing import Process
+import gipc
+import gevent
+import zerorpc
+
+from smhcluster      import master
+from smhcluster.util import klass
+
+from smhcluster.slave import Slave
+
+with open(args.config) as f:
+    args.config = yaml.load(f.read())
+
+def master_run(m_run):
+    print 'master run'
+    # This just gets the cluster listening for slave servers
+    m_run.listen()
+
+def slave_run(s_run):
+    print 'slave_run'
+    try:
+        s_run.run()
+    except KeyboardInterrupt:
+        slave.deregister(args.master)
+
+def slave_init(slave, port):
+    print 'init slave'
+    s = zerorpc.Server(slave)
+    s.bind('tcp://0.0.0.0:%i' % port)
+    gipc.start_process(target=slave_run, args=(s,))
+
+# We'll create a cluster, start it, and then check our configuration for the 
+# various adapters we're going to use. 
+m = master.Master()
+
+m.config(args.config)
+#master_process = gevent.spawn(master_run, m)
+#master_process = gipc.start_process(target=master_run, args=(m,))
+master_process = Process(target=master_run, args=(m,))
+master_process.start()
+time.sleep(3)
+print 'create master_run'
+
+'''
+slaves = [Slave('localhost:%d' % d) for d in range(6000,6002)]
+for i in range(len(slaves)):
+    slave_init(slaves[i], 6000+i)
+
+print 'registing...'
+time.sleep(5)
+for i in range(len(slaves)):
+    gevent.spawn(slaves[i].register, 'localhost:5678')
+'''
+master_process.join()
