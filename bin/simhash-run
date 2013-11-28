@@ -6,6 +6,8 @@ sleep 5
 a=6000
 while [ $a -lt 6004 ]
 do
+    echo $a
     nohup simhash-slave localhost:5678 --port $a >log.txt 2>&1 &
+    sleep 2
     a=$(( $a + 1 ))
 done
