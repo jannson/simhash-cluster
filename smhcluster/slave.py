@@ -54,6 +54,7 @@ class Slave(object):
     def remove(self, *removals):
         '''Remove h from the shard for q'''
         for q, h in removals:
+            logger.info('Removing %s (%i)' % (bin(q), q))
             return self.find(q).remove(h)
     
     def register(self, host):
