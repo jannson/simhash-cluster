@@ -50,12 +50,14 @@ class Slave(object):
         '''Insert h in to the shard for q'''
         for q, h in insertions:
             self.find(q).insert(h)
+        return True
     
     def remove(self, *removals):
         '''Remove h from the shard for q'''
         for q, h in removals:
             logger.info('Removing %s (%i)' % (bin(q), q))
-            return self.find(q).remove(h)
+            self.find(q).remove(h)
+        return True
     
     def register(self, host):
         import zerorpc

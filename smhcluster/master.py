@@ -191,8 +191,8 @@ class Master(object):
                 q = h ^ (i << (64 - self.differing_bits))
                 logger.debug('Looking up %s (%i)' % (bin(q), q))
                 destinations[self.find(q)].append((q, h))
-        print destinations
         for k, removals in destinations.items():
+            #logger.info('%s' % repr(removals))
             k.remove(*removals)
             logger.info('Finished removing %s' % k)
         return True
