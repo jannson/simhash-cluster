@@ -44,7 +44,7 @@ class Master(object):
     def register(self, hostname):
         # Accept a new slave. First, determine how many shards we're going to
         # give to each node once we add this new one
-        count = max(self.max_node_shards, self.shards / (len(self.slaves) + 1))
+        count = min(self.max_node_shards, self.shards / (len(self.slaves) + 1))
         assign = self.unassigned()[0:count]
         if (len(assign) < count):
             # We need to actually steal shards from some of the existing slaves
